@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>PKC 10C 2022-2023</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+        <link rel="icon" href="../images/icon.webp">
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="/" class="logo"><strong>10 Cotton</strong> 2022-2023</a>
+									<ul class="icons">
+                                        <li><a href="https://instagram.com/10c_2022.2023/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+										<li><a href="https://github.com/a-y-lol/10c-eleventy/" class="icon brands fa-github"><span class="label">Github</span></a></li>
+                                        <li><a href="mailto:10c@pkc10c.ml" class="icon fa-envelope"><span class="label">email</span></a></li>
+									</ul>
+								</header>
+
+							<!-- Banner -->
+								<section id="banner">
+									<div class="content">
+										<header>
+											<h1>HK Local Weather</h1>
+											<p>Data from the <a href="https://www.hko.gov.hk/"><strong>Hong Kong Observatory</strong></a></p>
+										</header>
+									</div>
+								</section>
+								<script>
+									let getJSON = function(url, callback) {
+										let xhr = new XMLHttpRequest();
+										xhr.open('GET', url, true);
+										xhr.responseType = 'json';
+										xhr.onload = function() {
+											let status = xhr.status;
+											if (status === 200) {
+											callback(null, xhr.response);
+											} else {
+											callback(status, xhr.response);
+											}
+										};
+										xhr.send();
+									};
+									function getClosestWeather(position) {
+										const weatherstationlist = [
+											"King's Park", "Hong Kong Observatory", "Wong Chuk Hang", "Ta Kwu Ling", "Lau Fau Shan", "Tai Po", "Sha Tin", "Tuen Mun", "Tseung Kwan O", "Sai Kung",
+											"Cheung Chau", "Chek Lap Kok", "Tsing Yi", "Shek Kong", "Tsuen Wan Ho Koon", "Tsuen Wan Shing Mun Valley", "Hong Kong Park", "Shau Kei Wan", "Kowloon City",
+											"Happy Valley", "Wong Tai Sin", "Stanley", "Kwun Tong", "Sham Shui Po", "Kai Tak Runway Park", "Yuen Long Park", "Tai Mei Tuk"
+										]
+										const B = {
+											0 : {x: 114.17277778, y: 22.31194444},
+											1 : {x: 114.17416667, y: 22.30194444},
+											2 : {x: 114.17361111, y: 22.24777778},
+											3 : {x: 114.15666667, y: 22.52861111},
+											4 : {x: 113.98361111, y: 22.46888889},
+											5 : {x: 114.17888889, y: 22.44611111},
+											6 : {x: 114.21, y: 22.4025},
+											7 : {x: 113.96416667, y: 22.38583333},
+											8: {x: 114.25555556, y: 22.31583333},
+											9 : {x: 114.27444444, y: 22.37555556},
+											10 : {x: 114.02666667, y: 22.20111111},
+											11 : {x: 113.92194444, y: 22.30944444},
+											12 : {x: 114.10916667, y: 22.34805556},
+											13 : {x: 114.08472222, y: 22.43611111},
+											14 : {x: 114.10777778, y: 22.38361111},
+											15: {x: 114.12666667, y: 22.37555556},
+											16 : {x: 114.16222222, y: 22.27833333},
+											17 : {x: 114.23611111, y: 22.28166667},
+											18 : {x: 114.18472222, y: 22.335},
+											19 : {x: 114.18361111, y: 22.27055556},
+											20 : {x: 114.20527778, y: 22.33944444},
+											21 : {x: 114.21861111, y: 22.21416667},
+											22 : {x: 114.22472222, y: 22.31861111},
+											23 : {x: 114.13694444, y: 22.33583333},
+											24 : {x: 114.21694444, y: 22.30472222},
+											25 : {x: 114.01833333, y: 22.44083333},
+											26 : {x: 114.23165, y: 22.305652}
+										}
+									
+										let A = {x: position.coords.longitude, y: position.coords.latitude}
+									
+										let allDistances = []
+									
+										for (let i = 0; i < 27; i++) {
+											const distance = Math.abs(Math.sqrt( (B[i].x - A.x)** 2 + (B[i].y - A.y)**2)) // correct
+											allDistances.push(distance)
+										}
+										let nearest = allDistances.indexOf(Math.min(...allDistances))
+									
+										getJSON("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en", function(err, res) {
+											if(err !== null) {
+												console.log(err)
+											} else {
+												if (A.x >= 114.168850 && A.x <= 114.221097 && A.y >= 22.355019 && A.y <= 22.455975) {
+													document.querySelector("#temperature-value").textContent = res.temperature.data[6].value + "°C"
+													document.querySelector("#weather-station").textContent = res.temperature.data[6].place
+													document.querySelector("#rain-value").textContent = "Rainfall " + res.rainfall.data[6].max + "mm"
+													document.querySelector("#rh-value").textContent = "R.H. " + res.humidity.data[0].value + "%"
+												} else {
+													document.querySelector("#weather-station").textContent = res.temperature.data[nearest].place
+													document.querySelector("#temperature-value").textContent = res.temperature.data[nearest].value + "°C"
+													document.querySelector("#rh-value").textContent = "R.H. " + res.humidity.data[0].value + "%"
+												}
+												document.querySelector("#weather-message").textContent = res.warningMessage.join("\n")
+											}
+										})
+									}
+									function getLocation() {
+										if (navigator.geolocation) {
+											let position = navigator.geolocation.getCurrentPosition(getClosestWeather)
+										} else {
+											alert("Browser does not support Local Weather feature")
+										}
+									}
+									function handlePermission() {
+										if(navigator.permissions === undefined) {
+											console.log("Unable to detect location permissions")
+											getLocation()
+										} else {
+											navigator.permissions.query({name:'geolocation'}).then(function(result) {
+												if (result.state == 'granted') {
+													report(result.state);
+												} else if (result.state == 'prompt') {
+													report(result.state);
+												navigator.geolocation.getCurrentPosition(revealPosition,positionDenied,geoSettings);
+												} else if (result.state == 'denied') {
+													report(result.state);
+												}
+												result.onchange = function() {
+													report(result.state);
+												}
+											})
+										}
+									
+									}
+									</script>
+
+									<section>
+										<header class="major">
+											<h2>Weather Now In <span id="weather-station">...</span></h2>
+										</header>
+										<div class="temperature">
+											<article>
+												<h1 style="font-size: 6rem; font-weight: 600;" id="temperature-value">Loading...</h1>
+												<h3 id="rain-value"></h3>
+												<h2 id="rh-value"></h2>
+												<p id="weather-message"></p>
+												<ul class="actions">
+													<li><a href="https://www.hko.gov.hk/" class="button">More</a></li>
+												</ul>
+											</article>
+										</div>
+									</section>
+
+									<script>
+										function report(state) {
+											if (state === "denied") {
+												alert("Unable to get your area's Actual Weather Info")
+											} else {
+												getLocation()
+											}
+										}
+										handlePermission();
+									
+									</script>
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="/">Home</a></li>
+										<li><a href="https://sites.google.com/pkc.edu.hk/zoom-time-table-2022-23/home/10c">Zoom Timetable</a></li>
+                                        <!-- <li><a href="elements.html">Homework List</a></li> -->
+
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Quick Links</h2>
+									</header>
+									<div class="mini-posts">
+										<article>
+											<a href="https://eclass.puikiucollege.edu.hk" class="image"><img loading="lazy" src="https://eclass.puikiucollege.edu.hk/file/organization_info/organization_background_image.jpg" alt="Puikiu College eClass" /></a>
+											<p>Pui Kiu College eClass</p>
+										</article>
+										<article>
+											<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="image"><img src="../images/youtube.webp" alt="YouTube" /></a>
+											<p>10C Class Song</p>
+										</article>
+										<article>
+											<a href="../weather/" class="image"><img src="../images/weather.webp" alt="" /></a>
+											<p>Now Weather</p>
+										</article>
+									</div>
+								</section>
+
+							<!-- Section -->
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">&copy; 10C 2022-2023. All rights reserved.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+
+	</body>
+</html>
