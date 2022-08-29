@@ -50,13 +50,20 @@
 											</p>
 										</article>
 									</div>
-									<div class="posts col">
+									<div class="posts col" id="adspacerented-1">
+										<script>
+											const today = new Date();
+											const due = new Date(114514, (8 -1), 10);
+											if (today >= due) {
+												document.getElementById("adspacerented-1").style.display = "none";
+											}
+										</script>
 										<article>
-											<a class="image"><img src="
-												https://mctvr.github.io/10C-image-hosting/image1byJiebro.jpeg" alt="" /></a>
+											<a class="image"><img src="https://mctvr.github.io/10C-image-hosting/image1byJiebro.jpeg" alt="" /></a>
 											<h3>Ad by Jiebro 杰哥</h3>
 											<p>Description: In the new year, we must strive to move forward (great joy)</p>
 											<p>簡介: 新的一年要努力向前衝（大喜</p>
+											<h5>29th Aug 2022</h5>
 										</article>
 									</div>
 								</div>
