@@ -240,6 +240,18 @@
 						</div>
 					</div>
 
+					<div id="lycoreco-widget" style="position: fixed; bottom: 0; right: 0;"></div>
+					<script>
+					  function initLycoRecoWidget() {
+						new SakanaWidget().setState({ i: 0.04 }).mount('#lycoreco-widget');
+					  }
+					</script>
+					<script
+					  async
+					  onload="initLycoRecoWidget()"
+					  src="https://cdn.jsdelivr.net/npm/sakana-widget@2.2.1/lib/sakana.min.js"
+					></script>
+
 			</div>
 
 		<!-- Scripts -->
