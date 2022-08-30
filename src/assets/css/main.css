@@ -25,6 +25,13 @@
   }
 }
 
+#lycoreco-widget, .sakana-widget-wrapper, .sakana-widget-app, .sakana-widget-canvas, .sakana-widget-main {
+  background-color: transparent !important;
+}
+#lycoreco-widget .sakana-widget-main .sakana-widget-img {
+  background-color: transparent !important;
+}
+
 iframe {
   border-radius: 4px;
 }
