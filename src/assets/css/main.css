@@ -5,6 +5,30 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
+
+@media (prefers-color-scheme: dark) {
+  *, *:before, *:after {
+    color: #cacaca;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #fff !important;
+  }
+
+  strong {
+    color: #ffffff !important;
+  }
+
+  html, body, div, span, article, aside, details, figcaption, figure,
+  footer, header, hgroup, menu, nav, section {
+    background-color: #000 !important;
+  }
+}
+
+iframe {
+  border-radius: 4px;
+}
+
 html, body, div, span, applet, object,
 iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
 pre, a, abbr, acronym, address, big, cite,
