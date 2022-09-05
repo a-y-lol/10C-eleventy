@@ -19,7 +19,7 @@
     color: #cacaca;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5, h6, th {
     color: #fff !important;
   }
 
@@ -28,7 +28,7 @@
   }
 
   html, body, div, span, article, aside, details, figcaption, figure,
-  footer, header, hgroup, menu, nav, section {
+  footer, header, hgroup, menu, nav, section, table, tr, tbody {
     background-color: #000 !important;
   }
 }

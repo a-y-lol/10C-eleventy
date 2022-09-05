@@ -103,15 +103,46 @@
 
 										<article>
 											<a class="image"><img loading="lazy" src="images/schoolarrangements.webp" alt="" /></a>
-											<div class="new-badge">
+
+											<div class="new-badge" id="new-badge-1">
+												<script>
+													(() => {
+														const today = new Date();
+														const due = new Date(2022, (9 -1), 13);
+														if (today >= due) {
+															document.getElementById("new-badge-1").style.display = "none";
+														}
+													})();
+												</script>
 												<span>
 													<strong>
 														NEW
 													</strong>
 												</span>
 											</div>
+
 											<h3>Arrangements for the G9-G12 Whole-day Face-to-Face Classes</h3>
 											<p>The student vaccination rates for G9, G10, G11 and G12 have exceeded <strong>90%</strong>, thus fulfilling the EDB's requirement for <strong>whole-day</strong> face-to-face classes.</p>
+											<header class="major">
+												<h4>Date: From Tue 13th September 2022 Onwards</h4>
+											</header>
+
+											<table>
+												<thead>
+													<tr>
+														<th>Morning Session<br>(7 Periods)</th>
+														<th>Lunch Time</th>
+														<th>Afternoon Session<br>(2 Periods)</th>
+													</tr>
+												</thead>
+												<tr>
+													<th>8:15 a.m. to 12:55 p.m.</th>
+													<th>12:55 p.m. to 2:10 p.m.</th>
+													<th>2:10 p.m. to 3:20 p.m.</th>
+												</tr>
+											</table>
+											<p>Students may refer to the revised time-tables on <a href="https://puikiu.zoom.us">PKC Zoom Timetable</a>.</p>
+
 											<header class="major">
 												<h4>Lunch Arrangements</h4>
 											</header>
