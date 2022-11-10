@@ -153,6 +153,11 @@
             padding: 0;
             background-color: #000;
         }
+
+        div {
+            padding: 0 12pt;
+        }
+
         canvas {
             display: block;
             margin-top: 14pt;
@@ -164,11 +169,44 @@
             color: #fff;
         }
 
+        .btn {
+            border: none;
+            outline: none;
+            padding: 2px 8px;
+            border-radius: 25px;
+            color: #fff;
+            background-color: #53599A;
+            transition: .3s;
+        }
+
+        .btn:active {
+            background-color: #033F63;
+        }
+
+        .btn:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
         input[type="file"] {
             top: 10px;
             left: 8px;
             font-size: 17px;
             color: #b8b8b8;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            border: none;
+            outline: none;
+            padding: 2px 8px;
+            border-radius: 25px;
+            color: #fff;
+            background-color: #53599A;
+            transition: .3s;
+        }
+
+        input[type="file"]::-webkit-file-upload-button:active {
+            background-color: #033F63;
         }
 
         button[type="submit"] {
@@ -186,16 +224,19 @@
 </head>
 <body>
 
-    <h1>Online Live Viewer<br>
-        for viewing QOI<br>
-        or NHI (nhenry image)<br>
-        format images.</h1>
+    <div>
+        <h1>
+            Online Live Viewer<br>
+            for QOI or NHI (nhenry image)<br>
+            encoded images
+        </h1>
 
-    <form onsubmit="viewPic()">
-        <input type="file" id="file" accept=".qoi,.nhi" />
-        <button type="submit" id="submit">View</button>
-        <button disabled id="download" onclick="exportCanvasAsPNG()">Download</button>
-    </form>
+        <form onsubmit="viewPic()">
+            <input type="file" id="file" accept=".qoi,.nhi" />
+            <button class="btn" type="submit" id="submit">View</button>
+            <button class="btn" disabled id="download" onclick="exportCanvasAsPNG()">Download</button>
+        </form>
+    </div>
 
     <canvas></canvas>
 
@@ -221,6 +262,13 @@
 
     function viewPic() {
         event.preventDefault()
+        const loading = document.createElement('p');
+        loading.innerText = 'Loading...';
+        loading.style.color = '#fff';
+        loading.style.fontSize = '20pt';
+
+        document.querySelector("form").appendChild(loading);
+
         const reader = new FileReader()
         reader.readAsArrayBuffer(file.files[0])
         reader.onloadend = () => {
@@ -238,6 +286,8 @@
 
             const download = document.getElementById('download')
             download.disabled = false
+
+            document.querySelector("form").removeChild(loading);
         }
     }
 </script>
