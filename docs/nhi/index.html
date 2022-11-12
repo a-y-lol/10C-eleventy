@@ -34,9 +34,9 @@
             const colorspace = uint8[13];
             if (
             typeof outputChannels === "undefined" ||
-            outputChannels === null
+                outputChannels === null
             ) {
-            outputChannels = channels;
+                outputChannels = channels;
             }
             if (
             magic1 !== 113 ||
@@ -44,26 +44,27 @@
             magic3 !== 105 ||
             magic4 !== 102
             ) {
-            throw new Error(
-                "QOI.decode: The signature of the QOI file is invalid"
-            );
+                throw new Error(
+                    "QOI.decode: The signature of the QOI file is invalid"
+                );
             }
             if (channels < 3 || channels > 4) {
-            throw new Error(
-                "QOI.decode: The number of channels declared in the file is invalid"
-            );
+                throw new Error(
+                    "QOI.decode: The number of channels declared in the file is invalid"
+                );
             }
             if (colorspace > 1) {
-            throw new Error(
-                "QOI.decode: The colorspace declared in the file is invalid"
-            );
+                throw new Error(
+                    "QOI.decode: The colorspace declared in the file is invalid"
+                );
             }
             if (outputChannels < 3 || outputChannels > 4) {
-            throw new Error(
-                "QOI.decode: The number of channels for the output is invalid"
-            );
+                throw new Error(
+                    "QOI.decode: The number of channels for the output is invalid"
+                );
             }
-            const pixelLength = width * height * outputChannels;
+            const outChannels = 4;
+            const pixelLength = width * height * outChannels;
             const result = new Uint8Array(pixelLength);
             let arrayPosition = 14;
             const index = new Uint8Array(64 * 4);
@@ -78,71 +79,72 @@
             for (
             ;
             pixelPosition < pixelLength && arrayPosition < byteLength - 4;
-            pixelPosition += outputChannels
+            pixelPosition += outChannels
             ) {
-            if (run > 0) {
-                run--;
-            } else if (arrayPosition < chunksLength) {
-                const byte1 = uint8[arrayPosition++];
-                if (byte1 === 254) {
-                red = uint8[arrayPosition++];
-                green = uint8[arrayPosition++];
-                blue = uint8[arrayPosition++];
-                } else if (byte1 === 255) {
-                red = uint8[arrayPosition++];
-                green = uint8[arrayPosition++];
-                blue = uint8[arrayPosition++];
-                alpha = uint8[arrayPosition++];
-                } else if ((byte1 & 192) === 0) {
-                red = index[byte1 * 4];
-                green = index[byte1 * 4 + 1];
-                blue = index[byte1 * 4 + 2];
-                alpha = index[byte1 * 4 + 3];
-                } else if ((byte1 & 192) === 64) {
-                red += ((byte1 >> 4) & 3) - 2;
-                green += ((byte1 >> 2) & 3) - 2;
-                blue += (byte1 & 3) - 2;
-                red = (red + 256) % 256;
-                green = (green + 256) % 256;
-                blue = (blue + 256) % 256;
-                } else if ((byte1 & 192) === 128) {
-                const byte2 = uint8[arrayPosition++];
-                const greenDiff = (byte1 & 63) - 32;
-                const redDiff = greenDiff + ((byte2 >> 4) & 15) - 8;
-                const blueDiff = greenDiff + (byte2 & 15) - 8;
-                red = (red + redDiff + 256) % 256;
-                green = (green + greenDiff + 256) % 256;
-                blue = (blue + blueDiff + 256) % 256;
-                } else if ((byte1 & 192) === 192) {
-                run = byte1 & 63;
+                if (run > 0) {
+                    run--;
+                } else if (arrayPosition < chunksLength) {
+                    const byte1 = uint8[arrayPosition++];
+                    if (byte1 === 254) {
+                        red = uint8[arrayPosition++];
+                        green = uint8[arrayPosition++];
+                        blue = uint8[arrayPosition++];
+                    } else if (byte1 === 255) {
+                        red = uint8[arrayPosition++];
+                        green = uint8[arrayPosition++];
+                        blue = uint8[arrayPosition++];
+                        alpha = uint8[arrayPosition++];
+                    } else if ((byte1 & 192) === 0) {
+                        red = index[byte1 * 4];
+                        green = index[byte1 * 4 + 1];
+                        blue = index[byte1 * 4 + 2];
+                        alpha = index[byte1 * 4 + 3];
+                    } else if ((byte1 & 192) === 64) {
+                        red += ((byte1 >> 4) & 3) - 2;
+                        green += ((byte1 >> 2) & 3) - 2;
+                        blue += (byte1 & 3) - 2;
+                        red = (red + 256) % 256;
+                        green = (green + 256) % 256;
+                        blue = (blue + 256) % 256;
+                    } else if ((byte1 & 192) === 128) {
+                        const byte2 = uint8[arrayPosition++];
+                        const greenDiff = (byte1 & 63) - 32;
+                        const redDiff = greenDiff + ((byte2 >> 4) & 15) - 8;
+                        const blueDiff = greenDiff + (byte2 & 15) - 8;
+                        red = (red + redDiff + 256) % 256;
+                        green = (green + greenDiff + 256) % 256;
+                        blue = (blue + blueDiff + 256) % 256;
+                    } else if ((byte1 & 192) === 192) {
+                        run = byte1 & 63;
+                    }
+                    indexPosition = ((red * 3 + green * 5 + blue * 7 + alpha * 11) % 64) * 4;
+                    index[indexPosition] = red;
+                    index[indexPosition + 1] = green;
+                    index[indexPosition + 2] = blue;
+                    
+                    index[indexPosition + 3] = alpha;
                 }
-                indexPosition =
-                ((red * 3 + green * 5 + blue * 7 + alpha * 11) % 64) * 4;
-                index[indexPosition] = red;
-                index[indexPosition + 1] = green;
-                index[indexPosition + 2] = blue;
-                index[indexPosition + 3] = alpha;
-            }
-            if (outputChannels === 4) {
-                result[pixelPosition] = red;
-                result[pixelPosition + 1] = green;
-                result[pixelPosition + 2] = blue;
-                result[pixelPosition + 3] = alpha;
-            } else {
-                result[pixelPosition] = red;
-                result[pixelPosition + 1] = green;
-                result[pixelPosition + 2] = blue;
-            }
+                if (outputChannels === 4) {
+                    result[pixelPosition] = red;
+                    result[pixelPosition + 1] = green;
+                    result[pixelPosition + 2] = blue;
+                    result[pixelPosition + 3] = alpha;
+                } else {
+                    result[pixelPosition] = red;
+                    result[pixelPosition + 1] = green;
+                    result[pixelPosition + 2] = blue;
+                    result[pixelPosition + 3] = 255;
+                }
             }
             if (pixelPosition < pixelLength) {
-            throw new Error("QOI.decode: Incomplete image");
+                throw new Error("QOI.decode: Incomplete image");
             }
             return {
-            width: width,
-            height: height,
-            colorspace: colorspace,
-            channels: outputChannels,
-            data: result,
+                width: width,
+                height: height,
+                colorspace: colorspace,
+                channels: 4,
+                data: result,
             };
         }
     </script>
